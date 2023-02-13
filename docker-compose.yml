@@ -1,0 +1,49 @@
+version: "2.3"
+
+services:
+  rclone:
+    build:
+      context: ./rclone
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - apparmor:unconfined
+    devices:
+      - "/dev/fuse:/dev/fuse"
+    restart: always
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - "./rclone/rclone.conf:/config/rclone.conf:ro"
+      - "./rclone/config.txt:/config/config.txt:ro"
+      - "./rclone/mounts:/mnt:shared"
+  mini_fm:
+    build:
+      context: ./mini_fm
+    restart: always
+    volumes:
+      - "./rclone/mounts/data:/var/www/html/public/uploads:rw"
+    depends_on:
+      - rclone
+    ports:
+      - "8001:8000"
+  imagor:
+    image: shumc/imagorvideo:latest
+    volumes:
+      - ./rclone/mounts:/mnt/data
+    environment:
+      PORT: 8000
+      IMAGOR_UNSAFE: 1 # unsafe URL for testing
+
+      FILE_LOADER_BASE_DIR: /mnt/data # enable file loader by specifying base dir
+
+      FILE_STORAGE_BASE_DIR: /mnt/data # enable file storage by specifying base dir
+      FILE_STORAGE_MKDIR_PERMISSION: 0755 # optional
+      FILE_STORAGE_WRITE_PERMISSION: 0666 # optional
+
+      FILE_RESULT_STORAGE_BASE_DIR: /mnt/data/result # enable file result storage by specifying base dir
+      FILE_RESULT_STORAGE_MKDIR_PERMISSION: 0755 # optional
+      FILE_RESULT_STORAGE_WRITE_PERMISSION: 0666 # optional
+    ports:
+      - "8000:8000"

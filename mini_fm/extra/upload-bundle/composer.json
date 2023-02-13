@@ -1,0 +1,53 @@
+{
+    "name": "pentatrion/upload-bundle",
+    "description": "Upload Helper and File Manager for your Symfony App",
+    "keywords": [
+        "bundle",
+        "symfony",
+        "upload",
+        "file-manager"
+    ],
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Hugues Tavernier",
+            "email": "hugues.tavernier@protonmail.com"
+        }
+    ],
+    "suggest": {
+        "liip/imagine-bundle": "required to use thumbnails with your file manager",
+        "imagine/imagine": "required for image modification (resize, crop, rotation)",
+        "symfony/validator": "required for upload file validation",
+        "symfony/security-bundle": "required with Form"
+    },
+    "require": {
+        "imagine/imagine": "^1.0",
+        "liip/imagine-bundle": "^2.6",
+        "php": "^7.2.5 || ^8.0",
+        "symfony/mime": "^4.4 || ^5.0 || ^6.0",
+        "symfony/config": "^4.4 || ^5.0 || ^6.0",
+        "symfony/dependency-injection": "^4.4 || ^5.0 || ^6.0",
+        "symfony/http-kernel": "^4.4 || ^5.0 || ^6.0",
+        "symfony/framework-bundle": "^4.4 || ^5.0 || ^6.0",
+        "symfony/security-bundle": "^4.4 || ^5.0 || ^6.0",
+        "symfony/serializer": "^4.4 || ^5.0 || ^6.0",
+        "symfony/twig-bundle": "^4.4 || ^5.0 || ^6.0",
+        "symfony/validator": "^4.4 || ^5.0 || ^6.0",
+        "symfony/form": "^4.4 || ^5.0 || ^6.0",
+        "symfony/finder": "^4.4 || ^5.0 || ^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Pentatrion\\UploadBundle\\": "src/"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8"
+        }
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.4"
+    }
+}

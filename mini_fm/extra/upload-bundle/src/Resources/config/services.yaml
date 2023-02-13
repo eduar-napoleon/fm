@@ -1,0 +1,85 @@
+parameters:
+  kernel.web_root: "%kernel.project_dir%/public"
+services:
+
+
+  pentatrion_upload.uploaded_file_helper:
+    class: Pentatrion\UploadBundle\Service\UploadedFileHelper
+    arguments:
+      $uploadOrigins: "%pentatrion_upload.origins%"
+      $container: '@Psr\Container\ContainerInterface'
+      $defaultOriginName: "%pentatrion_upload.default_origin%"
+      $liipFilters: "%pentatrion_upload.liip_filters%"
+    tags: ["container.service_subscriber"]
+  Pentatrion\UploadBundle\Service\UploadedFileHelper: "@pentatrion_upload.uploaded_file_helper"
+  Pentatrion\UploadBundle\Service\UploadedFileHelperInterface: "@pentatrion_upload.uploaded_file_helper"
+
+  pentatrion_upload.file_manager_helper:
+    class: Pentatrion\UploadBundle\Service\FileManagerHelper
+    arguments:
+      $uploadOrigins: "%pentatrion_upload.origins%"
+  Pentatrion\UploadBundle\Service\FileManagerHelper: "@pentatrion_upload.file_manager_helper"
+  Pentatrion\UploadBundle\Service\FileManagerHelperInterface: "@pentatrion_upload.file_manager_helper"
+
+  Pentatrion\UploadBundle\Service\AbsoluteWebPathResolver:
+    arguments:
+        $filesystem: '@filesystem'
+        $requestContext: '@router.request_context'
+        $webRootDir: '%kernel.project_dir%/public'
+        $cachePrefix: 'media/cache'
+    tags:
+        -
+            name: "liip_imagine.cache.resolver"
+            resolver: absolute_web_path
+
+  Pentatrion\UploadBundle\Form\TextFilePickerType:
+    arguments:
+      $fileManagerHelper: '@Pentatrion\UploadBundle\Service\FileManagerHelperInterface'
+      $uploadedFileHelper: '@Pentatrion\UploadBundle\Service\UploadedFileHelperInterface'
+      $requestStack: '@request_stack'
+      $normalizer: '@serializer'
+    tags: ["form.type"]
+
+  Pentatrion\UploadBundle\Form\EntityFilePickerType:
+    arguments:
+      $fileManagerHelper: '@Pentatrion\UploadBundle\Service\FileManagerHelperInterface'
+      $requestStack: '@request_stack'
+      $normalizer: '@serializer'
+    tags: ["form.type"]
+
+  Pentatrion\UploadBundle\Form\EntitiesFilePickerType:
+    arguments:
+      $fileManagerHelper: '@Pentatrion\UploadBundle\Service\FileManagerHelperInterface'
+      $requestStack: '@request_stack'
+      $normalizer: '@serializer'
+    tags: ["form.type"]
+
+
+  pentatrion_upload.file_helper:
+    class: Pentatrion\UploadBundle\Service\FileHelper
+    arguments:
+      $uploadOrigins: "%pentatrion_upload.origins%"
+      $webRootDir: "%kernel.project_dir%/public"
+      $container: '@Psr\Container\ContainerInterface'
+      $uploadedFileHelper: '@Pentatrion\UploadBundle\Service\UploadedFileHelperInterface'
+    tags: ["container.service_subscriber"]
+
+  Pentatrion\UploadBundle\Service\FileHelper: "@pentatrion_upload.file_helper"
+
+  Pentatrion\UploadBundle\Twig\AssetExtension:
+    arguments:
+      $uploadedFileHelper: '@Pentatrion\UploadBundle\Service\UploadedFileHelperInterface'
+    tags: ["twig.extension"]
+
+  Pentatrion\UploadBundle\EventSubscriber\ExceptionSubscriber:
+    arguments:
+      $logger: '@Psr\Log\LoggerInterface'
+    tags: ["kernel.event_subscriber"]
+
+  Pentatrion\UploadBundle\Controller\UploadController:
+    tags: ["controller.service_arguments"]
+    arguments:
+      $uploadedFileHelper: '@Pentatrion\UploadBundle\Service\UploadedFileHelperInterface'
+      $security: '@Symfony\Component\Security\Core\Security'
+    calls:
+      - [setContainer, ["@service_container"]]
