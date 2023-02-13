@@ -25,7 +25,7 @@ services:
       context: ./mini_fm
     restart: always
     volumes:
-      - "./rclone/mounts/data:/var/www/html/public/uploads:rw"
+      - "./rclone/mounts/:/var/www/html/public/uploads:rw"
       - ./mini_fm/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - rclone
