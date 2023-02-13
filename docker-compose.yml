@@ -18,6 +18,8 @@ services:
       - "./rclone/rclone.conf:/config/rclone.conf:ro"
       - "./rclone/config.txt:/config/config.txt:ro"
       - "./rclone/mounts:/mnt:shared"
+    networks:
+      - captain-overlay-network
   mini_fm:
     build:
       context: ./mini_fm
@@ -27,7 +29,9 @@ services:
     depends_on:
       - rclone
     ports:
-      - "8001:8000"
+      - "8002:8000"
+    networks:
+      - captain-overlay-network
   imagor:
     image: shumc/imagorvideo:latest
     volumes:
@@ -46,4 +50,9 @@ services:
       FILE_RESULT_STORAGE_MKDIR_PERMISSION: 0755 # optional
       FILE_RESULT_STORAGE_WRITE_PERMISSION: 0666 # optional
     ports:
-      - "8000:8000"
+      - "8001:8000"
+    networks:
+      - captain-overlay-network
+networks:
+  captain-overlay-network:
+    external: true
