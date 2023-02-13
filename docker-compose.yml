@@ -26,6 +26,7 @@ services:
     restart: always
     volumes:
       - "./rclone/mounts/data:/var/www/html/public/uploads:rw"
+      - ./mini_fm/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - rclone
     ports:
@@ -35,7 +36,8 @@ services:
   imagor:
     image: shumc/imagorvideo:latest
     volumes:
-      - ./rclone/mounts:/mnt/data
+      - ./rclone/mounts/data:/mnt/data
+      - ./cache:/mnt/cache
     environment:
       PORT: 8000
       IMAGOR_UNSAFE: 1 # unsafe URL for testing
@@ -46,7 +48,7 @@ services:
       FILE_STORAGE_MKDIR_PERMISSION: 0755 # optional
       FILE_STORAGE_WRITE_PERMISSION: 0666 # optional
 
-      FILE_RESULT_STORAGE_BASE_DIR: /mnt/data/result # enable file result storage by specifying base dir
+      FILE_RESULT_STORAGE_BASE_DIR: /mnt/cache # enable file result storage by specifying base dir
       FILE_RESULT_STORAGE_MKDIR_PERMISSION: 0755 # optional
       FILE_RESULT_STORAGE_WRITE_PERMISSION: 0666 # optional
     ports:
