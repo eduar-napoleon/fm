@@ -28,7 +28,6 @@ services:
       - "./rclone/mounts/data:/var/www/html/public/uploads:rw"
       - "./mini_fm/default.conf:/etc/nginx/conf.d/server.conf"
     depends_on:
-      - rclone
       - imagor
     ports:
       - "8002:8000"
@@ -39,6 +38,8 @@ services:
     volumes:
       - ./rclone/mounts/:/mnt/data
       - ./cache:/mnt/cache
+    depends_on:
+      - rclone
     environment:
       PORT: 8000
       IMAGOR_UNSAFE: 1 # unsafe URL for testing
