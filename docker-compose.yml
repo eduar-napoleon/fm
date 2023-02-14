@@ -29,6 +29,7 @@ services:
       - "./mini_fm/default.conf:/etc/nginx/conf.d/default.conf"
     depends_on:
       - rclone
+      - imagor
     ports:
       - "8002:8000"
     networks:
