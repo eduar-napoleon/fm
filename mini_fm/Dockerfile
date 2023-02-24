@@ -31,8 +31,8 @@ RUN apk add --no-cache \
 COPY . .
 RUN composer Install
 # configure DATABASE_URL from .env (form example)
-RUN symfony console doctrine:database:create --if-not-exists
-RUN symfony console doctrine:migrations:migrate -n
+# RUN symfony console doctrine:database:create --if-not-exists
+# RUN symfony console doctrine:migrations:migrate -n
 RUN mkdir -p var/cache var/log
 RUN mkdir -p public/uploads public/media public/build
 RUN chmod -R 777 var/cache var/log public/uploads public/media
